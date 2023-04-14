@@ -13,11 +13,14 @@ function finish {
 }
 trap finish EXIT
 
-curl -fLO "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz"
-tar xzf "openssl-${OPENSSL_VERSION}.tar.gz"
+curl -fL "https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1t/openssl-${OPENSSL_VERSION}.tar.gz" | tar xz
 cd "openssl-${OPENSSL_VERSION}"
 
-CC=musl-gcc ./Configure no-shared no-zlib -fPIC --prefix="$MUSL_HOME" linux-x86_64
+CC=musl-gcc ./Configure \
+  no-tests \
+  no-shared \
+  no-zlib \
+  --prefix="$MUSL_HOME" linux-x86_64
 make depend
-C_INCLUDE_PATH="$MUSL_INCLUDE" make
-make install
+C_INCLUDE_PATH="$MUSL_INCLUDE" make -j$(nproc)
+make install_sw

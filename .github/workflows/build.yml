@@ -1,0 +1,23 @@
+name: Docker Build
+on:
+  push:
+    branches:
+    - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -t builder .
+
+    - name: Copy file
+      run: |
+        mkdir output
+        docker run -v $PWD/output:/output builder cp target/x86_64-unknown-linux-musl/release/mgns /output
+
+    - name: Verify
+      run: ldd output/mgns
