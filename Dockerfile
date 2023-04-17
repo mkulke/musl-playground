@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -yq \
   musl-tools \
   pkg-config
 
-RUN mkdir -p /src/.cargo
+RUN mkdir -p /src
 RUN curl -fL https://github.com/mkulke/az-snp-vtpm/tarball/main \
   | tar xz --strip-components 1 -C /src
 WORKDIR /src
